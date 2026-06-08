@@ -1,10 +1,10 @@
 /* FindOurOwn - Comprehensive UI Style */
 :root {
-    --primary: #1d3557;
-    --secondary: #457b9d;
-    --accent: #e63946;
-    --bg: #f1faee;
-    --text: #1d3557;
+    --primary: #4a5568; /* Dark Grey for Contact */
+    --secondary: #edf2f7; /* Light Grey for Volunteer */
+    --accent: #f56565; /* Salmon Red for Found */
+    --bg: #f7fafc; /* Very Light Grey background */
+    --text: #2d3748;
     --white: #ffffff;
 }
 
@@ -43,9 +43,9 @@ footer a { transition: opacity 0.3s ease; }
 footer a:hover { opacity: 1 !important; text-decoration: underline; }
 
 
-.btn-primary { background: var(--primary); color: white; }
-.btn-secondary { background: var(--secondary); color: white; }
-.btn-accent { background: var(--accent); color: white; }
+.btn-primary { background: var(--primary); color: white; border: 1px solid var(--primary); }
+.btn-secondary { background: var(--secondary); color: var(--text); border: 1px solid #cbd5e0; }
+.btn-accent { background: var(--accent); color: white; border: 1px solid var(--accent); }
 .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.85rem; }
 
 /* Forms */
@@ -73,8 +73,9 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--s
     background: white;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    transition: transform 0.3s ease;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+    transition: all 0.3s ease;
+    border: 1px solid #e2e8f0;
 }
 .gallery-item:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
 

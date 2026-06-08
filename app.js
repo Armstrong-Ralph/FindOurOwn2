@@ -131,18 +131,18 @@ class FindOurOwnApp {
         const nav = document.createElement('nav');
         nav.innerHTML = `
             <div class="container" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 0;">
-                <a href="javascript:void(0)" class="logo" onclick="app.navigate('home')" style="font-weight: bold; font-size: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
-                    <span style="color: #e63946;">❤️</span> FindOurOwn
+                <a href="javascript:void(0)" class="logo" onclick="app.navigate('home')" style="font-weight: bold; font-size: 1.5rem; display: flex; align-items: center; gap: 0.5rem; color: #2d3748; text-decoration: none;">
+                    <span style="color: #f56565;">❤️</span> FindOurOwn
                 </a>
                 <div class="nav-links" style="display: flex; gap: 1rem; align-items: center;">
                     <a href="javascript:void(0)" onclick="app.navigate('home')">Home</a>
                     <a href="javascript:void(0)" onclick="app.navigate('missing-persons')">Missing</a>
                     <a href="javascript:void(0)" onclick="app.navigate('found-persons')">Found</a>
                     ${this.user ? `
-                        <a href="javascript:void(0)" onclick="app.navigate('messages')">Messages</a>
+                        <a href="javascript:void(0)" onclick="app.navigate('report-missing')">Report</a>
                         <a href="javascript:void(0)" onclick="app.navigate('dashboard')">Dashboard</a>
-                        ${this.user.role === 'admin' ? `<a href="javascript:void(0)" onclick="app.navigate('admin')">Admin</a>` : ''}
-                        <button class="btn btn-sm btn-accent" onclick="app.logout()">Logout</button>
+                        <a href="javascript:void(0)" onclick="app.navigate('profile')">Profile</a>
+                        <a href="javascript:void(0)" onclick="app.logout()">Logout</a>
                     ` : `
                         <button class="btn btn-sm btn-primary" onclick="app.navigate('login')">Login</button>
                     `}
@@ -156,9 +156,9 @@ class FindOurOwnApp {
         const section = document.createElement('section');
         section.className = 'hero';
         section.innerHTML = `
-            <div class="container" style="text-align: center; padding: 4rem 0;">
-                <h1>Reuniting Families, Restoring Hope</h1>
-                <p style="margin: 1.5rem 0; font-size: 1.2rem; color: #666;">A trusted platform for Lagos and Ogun States.</p>
+            <div class="container" style="text-align: center; padding: 6rem 0;">
+                <h1 style="color: #2d3748; font-size: 3rem; margin-bottom: 1rem;">Reuniting Families, Restoring Hope</h1>
+                <p style="margin: 1.5rem 0; font-size: 1.2rem; color: #4a5568;">A trusted platform for Lagos and Ogun States.</p>
                 <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
                     <button class="btn btn-primary" onclick="app.navigate('report-missing')">Report Missing</button>
                     <button class="btn btn-secondary" onclick="app.navigate('report-found')">Report Found</button>
@@ -451,9 +451,12 @@ class FindOurOwnApp {
     renderMissingPersons() {
         const container = document.createElement('div');
         container.className = 'container';
+        container.style.background = 'white';
+        container.style.paddingTop = '2rem';
+        container.style.paddingBottom = '4rem';
         container.innerHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: center; margin: 2rem 0; flex-wrap: wrap; gap: 1rem;">
-                <h2>Missing Persons</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+                <h2 style="color: #2d3748; font-size: 1.8rem;">Missing Persons</h2>
                 <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
                     <input type="text" placeholder="Search by name..." oninput="app.searchGallery('missing', this.value)" style="padding: 0.5rem; border-radius: 4px; border: 1px solid #ddd; width: 200px;">
                     <select onchange="app.filterGallery('missing', this.value)" style="padding: 0.5rem; border-radius: 4px; border: 1px solid #ddd;">
@@ -473,9 +476,12 @@ class FindOurOwnApp {
     renderFoundPersons() {
         const container = document.createElement('div');
         container.className = 'container';
+        container.style.background = 'white';
+        container.style.paddingTop = '2rem';
+        container.style.paddingBottom = '4rem';
         container.innerHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: center; margin: 2rem 0; flex-wrap: wrap; gap: 1rem;">
-                <h2>Found Persons</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+                <h2 style="color: #2d3748; font-size: 1.8rem;">Found Persons</h2>
                 <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
                     <input type="text" placeholder="Search description..." oninput="app.searchGallery('found', this.value)" style="padding: 0.5rem; border-radius: 4px; border: 1px solid #ddd; width: 200px;">
                     <select onchange="app.filterGallery('found', this.value)" style="padding: 0.5rem; border-radius: 4px; border: 1px solid #ddd;">
@@ -494,17 +500,18 @@ class FindOurOwnApp {
 
     renderGalleryItems(data, type) {
         return data.map(p => `
-            <div class="gallery-item card">
-                ${p.photo ? `<img src="${p.photo}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px 8px 0 0;">` : `<div style="height: 200px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; font-size: 3rem;">👤</div>`}
-                <div class="gallery-content" style="padding: 1rem;">
-                    <h3>${p.name || (p.identified ? 'Identified' : 'Unidentified')}</h3>
-                    <p>${p.description}</p>
-                    <p style="font-size: 0.8rem; color: #888; margin-top: 0.5rem;">📍 ${p.lastSeenLocation || p.state} | 📅 ${p.date}</p>
-                    <div style="margin-top: 1rem; display: grid; gap: 0.5rem;">
-                        <button class="btn btn-primary" onclick="app.contactReporter('${p.phoneNumber || p.reporterPhone}', ${p.showPhone || false})">Contact</button>
+            <div class="gallery-item">
+                <div style="padding: 2rem; background: #edf2f7; display: flex; justify-content: center;">
+                    ${p.photo ? `<img src="${p.photo}" style="width: 120px; height: 120px; object-fit: cover; border-radius: 50%;">` : `<div style="width: 120px; height: 120px; background: #cbd5e0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3rem;">👤</div>`}
+                </div>
+                <div class="gallery-content" style="padding: 1.5rem;">
+                    <h3 style="margin-bottom: 0.5rem; color: #2d3748;">${p.name || (p.identified ? 'Identified' : 'Unidentified')}</h3>
+                    <p style="font-size: 0.95rem; color: #4a5568; min-height: 3em;">${p.description}</p>
+                    <div style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem;">
+                        <button class="btn btn-primary" onclick="app.contactReporter('${p.phoneNumber || p.reporterPhone}', ${p.showPhone || false})">Contact Reporter</button>
                         ${type === 'missing' ? `
-                            <button class="btn btn-secondary" onclick="app.volunteerForCase(${p.id})">Volunteer</button>
-                            <button class="btn btn-accent" onclick="app.navigate('report-found')">I Found Them</button>
+                            <button class="btn btn-secondary" onclick="app.volunteerForCase(${p.id})">Volunteer for Case</button>
+                            <button class="btn btn-accent" onclick="app.navigate('report-found')">I Found This Person</button>
                         ` : ''}
                     </div>
                 </div>
@@ -802,8 +809,8 @@ class FindOurOwnApp {
                         </div>
                     </div>
                 </div>
-                <div style="text-align: center; margin-top: 3rem; opacity: 0.5; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem;">
-                    © 2026 FindOurOwn. All rights reserved.
+                <div style="text-align: center; margin-top: 3rem; opacity: 0.7; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem; font-size: 0.9rem;">
+                    © 2026 FindOurOwn. Presentation Date: June 8, 2026 (Monday)
                 </div>
             </div>
         `;
