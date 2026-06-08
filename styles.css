@@ -33,10 +33,15 @@ nav { background: var(--white); box-shadow: 0 2px 4px rgba(0,0,0,0.05); position
     font-family: inherit;
 }
 
-/* Touch Effect: Subtle Pop & Scale */
+/* Touch Effect: Subtle Pop & Scale handled in JS for touch devices */
 .btn:active {
-    transform: scale(0.96);
+    transform: scale(0.98);
 }
+
+/* Detailed Footer Styles */
+footer a { transition: opacity 0.3s ease; }
+footer a:hover { opacity: 1 !important; text-decoration: underline; }
+
 
 .btn-primary { background: var(--primary); color: white; }
 .btn-secondary { background: var(--secondary); color: white; }
@@ -79,6 +84,7 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--s
 /* Responsive */
 @media (max-width: 600px) {
     .hero h1 { font-size: 2.2rem; }
-    .nav-links { gap: 0.5rem; }
+    .nav-links { gap: 0.5rem; flex-wrap: wrap; justify-content: center; }
     .nav-links a { font-size: 0.85rem; }
+    .container { padding: 0 1rem; }
 }

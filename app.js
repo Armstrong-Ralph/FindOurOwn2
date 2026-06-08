@@ -20,10 +20,19 @@ class FindOurOwnApp {
 
         this.dummyMissing = savedMissing ? JSON.parse(savedMissing) : [
             { id: 1, name: 'Tunde Bakare', age: 24, gender: 'Male', state: 'Lagos', lastSeenLocation: 'Ikeja', description: 'Wearing a blue shirt and black trousers.', phoneNumber: '2348012345678', showPhone: true, date: '2026-06-01' },
-            { id: 2, name: 'Chidi Okafor', age: 31, gender: 'Male', state: 'Ogun', lastSeenLocation: 'Abeokuta', description: 'Last seen at the local market.', phoneNumber: '2348098765432', showPhone: false, date: '2026-06-02' }
+            { id: 2, name: 'Chidi Okafor', age: 31, gender: 'Male', state: 'Ogun', lastSeenLocation: 'Abeokuta', description: 'Last seen at the local market.', phoneNumber: '2348098765432', showPhone: false, date: '2026-06-02' },
+            { id: 3, name: 'Amaka Eze', age: 19, gender: 'Female', state: 'Lagos', lastSeenLocation: 'Victoria Island', description: 'Last seen near Eko Hotels. Wearing a red dress.', phoneNumber: '2347055556666', showPhone: true, date: '2026-06-03' },
+            { id: 4, name: 'Olumide Adeyemi', age: 45, gender: 'Male', state: 'Ogun', lastSeenLocation: 'Sango Ota', description: 'Tall, light-skinned. Last seen at the bus stop.', phoneNumber: '2349011112222', showPhone: true, date: '2026-06-04' },
+            { id: 5, name: 'Fatima Yusuf', age: 28, gender: 'Female', state: 'Lagos', lastSeenLocation: 'Ikorodu', description: 'Hijab-wearing, carrying a brown handbag.', phoneNumber: '2348122223333', showPhone: false, date: '2026-06-05' },
+            { id: 6, name: 'Samuel Okon', age: 12, gender: 'Male', state: 'Lagos', lastSeenLocation: 'Surulere', description: 'School uniform (white and green). Small build.', phoneNumber: '2347033334444', showPhone: true, date: '2026-06-06' },
+            { id: 7, name: 'Bose Adeniran', age: 35, gender: 'Female', state: 'Ogun', lastSeenLocation: 'Ijebu Ode', description: 'Last seen at the market. Wearing Ankara.', phoneNumber: '2348044445555', showPhone: true, date: '2026-06-07' }
         ];
         this.dummyFound = savedFound ? JSON.parse(savedFound) : [
-            { id: 101, identified: true, description: 'Found at Ojodu Berger. Reunited with family.', state: 'Lagos', reporterPhone: '2347011223344', date: '2026-06-01' }
+            { id: 101, identified: true, name: 'Young Boy', age: 7, gender: 'Male', state: 'Lagos', lastSeenLocation: 'Ojodu Berger', description: 'Found wandering near the bridge. Currently at the police station.', reporterPhone: '2347011223344', showPhone: true, date: '2026-06-01' },
+            { id: 102, identified: false, name: 'Unidentified Woman', age: 60, gender: 'Female', state: 'Ogun', lastSeenLocation: 'Mowe', description: 'Elderly woman found disoriented. Wearing a floral wrapper.', reporterPhone: '2349088887777', showPhone: true, date: '2026-06-02' },
+            { id: 103, identified: false, name: 'Toddler', age: 3, gender: 'Female', state: 'Lagos', lastSeenLocation: 'Lekki Phase 1', description: 'Found at the park. Wearing a pink t-shirt.', reporterPhone: '2348022221111', showPhone: false, date: '2026-06-03' },
+            { id: 104, identified: true, name: 'Segun Arinze', age: 22, gender: 'Male', state: 'Lagos', lastSeenLocation: 'Oshodi', description: 'Found safe. Family contacted.', reporterPhone: '2347066665555', showPhone: true, date: '2026-06-04' },
+            { id: 105, identified: false, name: 'Teenager', age: 15, gender: 'Male', state: 'Ogun', lastSeenLocation: 'Redemption Camp', description: 'Found near the main gate. Wearing a black hoodie.', reporterPhone: '2348155554444', showPhone: true, date: '2026-06-05' }
         ];
         this.pendingReports = savedPending ? JSON.parse(savedPending) : [];
         this.volunteers = savedVolunteers ? JSON.parse(savedVolunteers) : [
@@ -56,12 +65,17 @@ class FindOurOwnApp {
     setupTouchHandlers() {
         document.addEventListener('touchstart', (e) => {
             const btn = e.target.closest('.btn');
-            if (btn) btn.style.transform = 'scale(0.96)';
+            if (btn) {
+                btn.style.transition = 'transform 0.1s ease';
+                btn.style.transform = 'scale(0.98)';
+            }
         }, { passive: true });
         
         document.addEventListener('touchend', (e) => {
             const btn = e.target.closest('.btn');
-            if (btn) btn.style.transform = 'scale(1)';
+            if (btn) {
+                btn.style.transform = 'scale(1)';
+            }
         }, { passive: true });
     }
 
@@ -101,6 +115,7 @@ class FindOurOwnApp {
             case 'admin': content = this.renderAdmin(); break;
             case 'volunteer': content = this.renderVolunteer(); break;
             case 'profile': content = this.renderProfile(); break;
+            case 'messages': content = this.renderMessages(); break;
             default: content = this.renderHome();
         }
         
@@ -124,6 +139,7 @@ class FindOurOwnApp {
                     <a href="javascript:void(0)" onclick="app.navigate('missing-persons')">Missing</a>
                     <a href="javascript:void(0)" onclick="app.navigate('found-persons')">Found</a>
                     ${this.user ? `
+                        <a href="javascript:void(0)" onclick="app.navigate('messages')">Messages</a>
                         <a href="javascript:void(0)" onclick="app.navigate('dashboard')">Dashboard</a>
                         ${this.user.role === 'admin' ? `<a href="javascript:void(0)" onclick="app.navigate('admin')">Admin</a>` : ''}
                         <button class="btn btn-sm btn-accent" onclick="app.logout()">Logout</button>
@@ -201,6 +217,8 @@ class FindOurOwnApp {
                 <form onsubmit="app.handleSignup(event)" style="margin-top: 2rem;">
                     <div class="form-group"><label>Full Name</label><input type="text" name="name" required></div>
                     <div class="form-group"><label>Email</label><input type="email" name="email" required></div>
+                    <div class="form-group"><label>WhatsApp Number (Optional)</label><input type="tel" name="phone" placeholder="e.g. 2348012345678"></div>
+                    <div class="form-group"><label><input type="checkbox" name="defaultShowPhone" checked> Show my number publicly by default</label></div>
                     <div class="form-group"><label>Password</label><input type="password" name="password" required></div>
                     <button type="submit" class="btn btn-primary" style="width: 100%;">Sign Up</button>
                 </form>
@@ -216,7 +234,14 @@ class FindOurOwnApp {
         const f = e.target;
         const email = f.email.value;
         if (this.accounts.find(a => a.email === email)) return alert('Account already exists');
-        const newAcc = { name: f.name.value, email, password: f.password.value, role: 'user' };
+        const newAcc = { 
+            name: f.name.value, 
+            email, 
+            phone: f.phone.value, 
+            defaultShowPhone: f.defaultShowPhone.checked,
+            password: f.password.value, 
+            role: 'user' 
+        };
         this.accounts.push(newAcc);
         this.user = newAcc;
         this.saveData();
@@ -427,9 +452,10 @@ class FindOurOwnApp {
         const container = document.createElement('div');
         container.className = 'container';
         container.innerHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: center; margin: 2rem 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin: 2rem 0; flex-wrap: wrap; gap: 1rem;">
                 <h2>Missing Persons</h2>
-                <div style="display: flex; gap: 0.5rem;">
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <input type="text" placeholder="Search by name..." oninput="app.searchGallery('missing', this.value)" style="padding: 0.5rem; border-radius: 4px; border: 1px solid #ddd; width: 200px;">
                     <select onchange="app.filterGallery('missing', this.value)" style="padding: 0.5rem; border-radius: 4px; border: 1px solid #ddd;">
                         <option value="all">All States</option>
                         <option value="Lagos">Lagos</option>
@@ -448,13 +474,16 @@ class FindOurOwnApp {
         const container = document.createElement('div');
         container.className = 'container';
         container.innerHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: center; margin: 2rem 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin: 2rem 0; flex-wrap: wrap; gap: 1rem;">
                 <h2>Found Persons</h2>
-                <select onchange="app.filterGallery('found', this.value)" style="padding: 0.5rem; border-radius: 4px; border: 1px solid #ddd;">
-                    <option value="all">All States</option>
-                    <option value="Lagos">Lagos</option>
-                    <option value="Ogun">Ogun</option>
-                </select>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <input type="text" placeholder="Search description..." oninput="app.searchGallery('found', this.value)" style="padding: 0.5rem; border-radius: 4px; border: 1px solid #ddd; width: 200px;">
+                    <select onchange="app.filterGallery('found', this.value)" style="padding: 0.5rem; border-radius: 4px; border: 1px solid #ddd;">
+                        <option value="all">All States</option>
+                        <option value="Lagos">Lagos</option>
+                        <option value="Ogun">Ogun</option>
+                    </select>
+                </div>
             </div>
             <div class="gallery" id="found-gallery">
                 ${this.renderGalleryItems(this.dummyFound, 'found')}
@@ -484,8 +513,28 @@ class FindOurOwnApp {
     }
 
     filterGallery(type, state) {
+        this.currentFilterState = state;
+        this.applyFilters(type);
+    }
+
+    searchGallery(type, query) {
+        this.currentSearchQuery = query.toLowerCase();
+        this.applyFilters(type);
+    }
+
+    applyFilters(type) {
         const data = type === 'missing' ? this.dummyMissing : this.dummyFound;
-        const filtered = state === 'all' ? data : data.filter(p => p.state === state);
+        const state = this.currentFilterState || 'all';
+        const query = this.currentSearchQuery || '';
+
+        let filtered = state === 'all' ? data : data.filter(p => p.state === state);
+        if (query) {
+            filtered = filtered.filter(p => 
+                (p.name && p.name.toLowerCase().includes(query)) || 
+                (p.description && p.description.toLowerCase().includes(query)) ||
+                (p.lastSeenLocation && p.lastSeenLocation.toLowerCase().includes(query))
+            );
+        }
         document.getElementById(`${type}-gallery`).innerHTML = this.renderGalleryItems(filtered, type);
     }
 
@@ -500,9 +549,11 @@ class FindOurOwnApp {
             <div class="card" style="max-width: 400px; width: 90%; text-align: center;">
                 <h3>Contact Information</h3>
                 <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem;">
-                    ${(showPhone && phone) ? whatsappBtn : ''}
-                    ${adminWhatsAppBtn}
-                    ${adminEmailBtn}
+                    ${(showPhone && phone) ? whatsappBtn : `
+                        <p style="font-size: 0.9rem; color: #666;">Reporter chose to remain private. Contact Admin for assistance.</p>
+                        ${adminWhatsAppBtn}
+                        ${adminEmailBtn}
+                    `}
                     <button class="btn btn-sm btn-accent" onclick="this.closest('div.card').parentElement.remove()">Close</button>
                 </div>
             </div>
@@ -526,8 +577,8 @@ class FindOurOwnApp {
                     <div class="form-group"><label>Last Seen Location *</label><input type="text" name="location" required></div>
                     <div class="form-group"><label>Description *</label><textarea name="desc" required></textarea></div>
                     <div class="form-group"><label>Photo</label><input type="file" onchange="app.handleImage(event)" accept="image/*"></div>
-                    <div class="form-group"><label>WhatsApp Number</label><input type="tel" name="phone"></div>
-                    <div class="form-group"><label><input type="checkbox" name="showPhone" checked> Show my phone number publicly</label></div>
+                    <div class="form-group"><label>WhatsApp Number</label><input type="tel" name="phone" value="${this.user?.phone || ''}"></div>
+                    <div class="form-group"><label><input type="checkbox" name="showPhone" ${this.user?.defaultShowPhone !== false ? 'checked' : ''}> Show my phone number publicly</label></div>
                     <div class="form-group"><label>Police Case Number (Optional)</label><input type="text" name="police_case"></div>
                     <button type="submit" class="btn btn-primary" style="width: 100%;">${this.user?.role === 'admin' ? 'Publish Now' : 'Submit Report'}</button>
                 </form>
@@ -555,7 +606,19 @@ class FindOurOwnApp {
     handleImage(e) {
         const file = e.target.files[0];
         const reader = new FileReader();
-        reader.onloadend = () => { this.lastUploadedImage = reader.result; };
+        reader.onloadend = () => { 
+            this.lastUploadedImage = reader.result; 
+            // Preview image if needed
+            const preview = e.target.parentElement.querySelector('img.preview');
+            if (preview) preview.src = reader.result;
+            else {
+                const img = document.createElement('img');
+                img.className = 'preview';
+                img.src = reader.result;
+                img.style = "width: 100%; max-height: 200px; object-fit: cover; border-radius: 8px; margin-top: 1rem;";
+                e.target.parentElement.appendChild(img);
+            }
+        };
         if (file) reader.readAsDataURL(file);
     }
 
@@ -594,6 +657,18 @@ class FindOurOwnApp {
         }
     }
 
+    editReport(id) {
+        const r = [...this.dummyMissing, ...this.dummyFound].find(x => x.id === id);
+        if (!r) return;
+        
+        const newDesc = prompt('Update Description:', r.description);
+        if (newDesc !== null) {
+            r.description = newDesc;
+            this.saveData();
+            this.render();
+        }
+    }
+
     renderVolunteer() {
         const container = document.createElement('div');
         container.className = 'container';
@@ -615,7 +690,7 @@ class FindOurOwnApp {
                         <div class="form-group"><label>Full Name</label><input type="text" name="name" value="${this.user?.name || ''}" required></div>
                         <div class="form-group"><label>Email</label><input type="email" name="email" value="${this.user?.email || ''}" required></div>
                         <div class="form-group"><label>Residency Address *</label><input type="text" name="address" required placeholder="Full home address"></div>
-                        <div class="form-group"><label>WhatsApp Number</label><input type="tel" name="phone" required></div>
+                        <div class="form-group"><label>WhatsApp Number *</label><input type="tel" name="phone" required></div>
                         <div class="form-group"><label>Why do you want to help?</label><textarea name="reason" required></textarea></div>
                         <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Application</button>
                     </form>
@@ -656,6 +731,8 @@ class FindOurOwnApp {
                 <form onsubmit="app.updateProfile(event)" style="margin-top: 2rem;">
                     <div class="form-group"><label>Full Name</label><input type="text" name="name" value="${this.user.name}"></div>
                     <div class="form-group"><label>Email</label><input type="email" value="${this.user.email}" disabled></div>
+                    <div class="form-group"><label>WhatsApp Number (Optional)</label><input type="tel" name="phone" value="${this.user.phone || ''}" placeholder="e.g. 2348012345678"></div>
+                    <div class="form-group"><label><input type="checkbox" name="defaultShowPhone" ${this.user.defaultShowPhone ? 'checked' : ''}> Show my number publicly by default</label></div>
                     <button type="submit" class="btn btn-primary" style="width: 100%;">Update Profile</button>
                 </form>
             </div>
@@ -666,9 +743,34 @@ class FindOurOwnApp {
     updateProfile(e) {
         e.preventDefault();
         this.user.name = e.target.name.value;
+        this.user.phone = e.target.phone.value;
+        this.user.defaultShowPhone = e.target.defaultShowPhone.checked;
         const acc = this.accounts.find(a => a.email === this.user.email);
-        if (acc) acc.name = this.user.name;
+        if (acc) {
+            acc.name = this.user.name;
+            acc.phone = this.user.phone;
+            acc.defaultShowPhone = this.user.defaultShowPhone;
+        }
         this.saveData(); alert('Profile Updated!'); this.render();
+    }
+
+    renderMessages() {
+        const container = document.createElement('div');
+        container.className = 'container';
+        container.innerHTML = `
+            <div style="max-width: 800px; margin: 2rem auto;">
+                <h2>Messages</h2>
+                <div class="card" style="margin-top: 2rem; min-height: 400px; display: flex; align-items: center; justify-content: center; background: #f8f9fa;">
+                    <div style="text-align: center; color: #666;">
+                        <div style="font-size: 4rem; margin-bottom: 1rem;">💬</div>
+                        <h3>No Active Conversations</h3>
+                        <p>Your messages with reporters and admins will appear here.</p>
+                        <button class="btn btn-primary" style="margin-top: 1.5rem;" onclick="app.navigate('missing-persons')">Browse Reports</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        return container;
     }
 
     createFooter() {
@@ -687,12 +789,14 @@ class FindOurOwnApp {
                             <a href="javascript:void(0)" onclick="app.navigate('missing-persons')" style="color: white; opacity: 0.8;">Missing Persons</a>
                             <a href="javascript:void(0)" onclick="app.navigate('found-persons')" style="color: white; opacity: 0.8;">Found Persons</a>
                             <a href="javascript:void(0)" onclick="app.navigate('volunteer')" style="color: white; opacity: 0.8;">Volunteer</a>
+                            <a href="javascript:void(0)" onclick="app.navigate('report-missing')" style="color: white; opacity: 0.8;">Report Missing</a>
                         </div>
                     </div>
                     <div>
                         <h4>Support</h4>
                         <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem;">
-                            <a href="mailto:${this.adminEmail}" style="color: white; opacity: 0.8;">Contact Us</a>
+                            <a href="mailto:${this.adminEmail}" style="color: white; opacity: 0.8;">Email Admin</a>
+                            <a href="https://wa.me/${this.adminWhatsApp}" target="_blank" style="color: white; opacity: 0.8;">WhatsApp Admin</a>
                             <a href="javascript:void(0)" style="color: white; opacity: 0.8;">Privacy Policy</a>
                             <a href="javascript:void(0)" style="color: white; opacity: 0.8;">Terms of Service</a>
                         </div>
